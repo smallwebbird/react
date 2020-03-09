@@ -121,13 +121,16 @@ function legacyCreateRootFromDOMContainer(
   if (!shouldHydrate) {
     let warned = false;
     let rootSibling;
+    // 首先判断lastChild是不是一个元素
     while ((rootSibling = container.lastChild)) {
       if (__DEV__) {
+        // 开发环境下
         if (
           !warned &&
-          rootSibling.nodeType === ELEMENT_NODE &&
+          rootSibling.nodeType === ELEMENT_NODE &&  // 判断lastChild是不是一个元素节点，并且判断最后一个元素是否有data-reactroot属性
           (rootSibling: any).hasAttribute(ROOT_ATTRIBUTE_NAME)
         ) {
+          // 如果满足上述情况，那么就报错
           warned = true;
           console.error(
             'render(): Target node has markup rendered by React, but there ' +
@@ -136,6 +139,7 @@ function legacyCreateRootFromDOMContainer(
           );
         }
       }
+      // 无限循环，直到container中的元素为空，也就是清除container中的元素
       container.removeChild(rootSibling);
     }
   }
