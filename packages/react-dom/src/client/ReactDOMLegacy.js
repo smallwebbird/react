@@ -6,6 +6,7 @@
  *
  * @flow
  */
+// 主要这里面采用了flow语法，其实和js都差不多
 
 import type {Container} from './ReactDOMHostConfig';
 import type {RootType} from './ReactDOMRoot';
@@ -187,9 +188,11 @@ function legacyRenderSubtreeIntoContainer(
   // TODO: Without `any` type, Flow says "Property cannot be accessed on any
   // member of intersection type." Whyyyyyy.
   let root: RootType = (container._reactRootContainer: any);
+  // _reactRootContainer 是用来判断container是否渲染过任何的reactElement
   let fiberRoot;
   if (!root) {
     // Initial mount
+    // 没有渲染过
     root = container._reactRootContainer = legacyCreateRootFromDOMContainer(
       container,
       forceHydrate,
@@ -289,6 +292,7 @@ export function render(
   container: Container,
   callback: ?Function,
 ) {
+  // 判断传入的container是不是合法的类型
   invariant(
     isValidContainer(container),
     'Target container is not a DOM element.',
