@@ -223,6 +223,7 @@ function legacyRenderSubtreeIntoContainer(
       };
     }
     // Update
+    // 初始化fiberRoot之后， children参数就是传递的元素，parentComponent为null， callback回调函数
     updateContainer(children, fiberRoot, parentComponent, callback);
   }
   return getPublicRootInstance(fiberRoot);
