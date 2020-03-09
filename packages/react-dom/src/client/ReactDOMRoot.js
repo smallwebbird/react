@@ -162,10 +162,10 @@ export function createLegacyRoot(
 export function isValidContainer(node: mixed): boolean {
   return !!(
     node &&
-    (node.nodeType === ELEMENT_NODE ||
-      node.nodeType === DOCUMENT_NODE ||
-      node.nodeType === DOCUMENT_FRAGMENT_NODE ||
-      (node.nodeType === COMMENT_NODE &&
+    (node.nodeType === ELEMENT_NODE ||   // ELEMENT_NODE 值为1，一个元素节点
+      node.nodeType === DOCUMENT_NODE || // 一个Document 节点
+      node.nodeType === DOCUMENT_FRAGMENT_NODE || // 一个DocumentFragment节点
+      (node.nodeType === COMMENT_NODE && // 如果节点类型是Comment,还要判断nodeValue的值
         (node: any).nodeValue === ' react-mount-point-unstable '))
   );
 }
