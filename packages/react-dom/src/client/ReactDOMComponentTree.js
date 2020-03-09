@@ -27,7 +27,9 @@ export function precacheFiberNode(hostInst, node) {
 }
 
 export function markContainerAsRoot(hostRoot, node) {
-  node[internalContainerInstanceKey] = hostRoot;
+  // 没有标识，就把internalContainerInstanceKey指向container， internalContainerInstanceKey的格式为
+  // '__reactContainere$' + randomKey
+  node[internalContainerInstanceK ] = hostRoot;
 }
 
 export function unmarkContainerAsRoot(node) {
@@ -35,6 +37,7 @@ export function unmarkContainerAsRoot(node) {
 }
 
 export function isContainerMarkedAsRoot(node) {
+  // 判断container是否有一个标识
   return !!node[internalContainerInstanceKey];
 }
 
