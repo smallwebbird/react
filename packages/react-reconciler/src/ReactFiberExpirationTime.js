@@ -74,20 +74,22 @@ function computeExpirationBucket(
 // 针对InteractiveExpiration
 // a - ceiling(a - cuurentTime+ 50, 10)
 // a - (((a-currentTime + 50) / 10 | 0) + 1) * 10
-// a - (a - currentTime + 50 + 10)
-//currentTime - 60
-// a - ms/10 - 60
+// a - (((a - currentTime + 50)/10 | 0) + 1) * 10
+// a - (((a - a + (ms/10 | 0) + 50)/10 | 0)+1) * 10
+// a - ((((ms/10 | 0) + 50)/10 | 0) +1) * 10
+// a- ((((ms/100 | 0) + 5) | 0) + 1) * 10
+// a - (((ms/100 | 0) + 50) | 0) + 10
+// 这种类型的过期时间，俩个过期时间相隔没有多余100ms， 那么得到的过期时间是相同的
 // 经过expirationTimeToMs转化
 // (a - (a - ms/10 -60)) * 10
 // (ms/10 | 0) + 600
 // 针对 AsyncExpiration 
 // a- ceiling(a - currentTime + 500, 25)
 // a - (((a - currentTime + 500)/ 25 | 0) + 1)* 25
-// a - (a - cuurentTime + 500 + 25)
-// currentTime - 525
-// a - ms/10 - 525
-// a - (a - (ms/10 | 0) -525) * 10
-// (ms/10 | 0) + 5250
+// a - (((a - a + (ms/10 | 0) + 500)/25 | 0)+1) * 25
+// a - ((((ms/10 | 0) + 500)/25 | 0) +1) * 25
+// a- ((((ms/250 | 0) + 20) | 0) + 1) * 25
+// a - (((ms/250 | 0) + 500) | 0) + 25
 
 // TODO: This corresponds to Scheduler's NormalPriority, not LowPriority. Update
 // the names to reflect.
