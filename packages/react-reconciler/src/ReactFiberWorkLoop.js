@@ -198,14 +198,14 @@ const {
 } = ReactSharedInternals;
 
 type ExecutionContext = number;
-
-const NoContext = /*                    */ 0b000000;
+// 定义react中对应的执行找
+const NoContext = /*                    */ 0b000000;  // 初始状态下
 const BatchedContext = /*               */ 0b000001;
 const EventContext = /*                 */ 0b000010;
 const DiscreteEventContext = /*         */ 0b000100;
 const LegacyUnbatchedContext = /*       */ 0b001000;
-const RenderContext = /*                */ 0b010000;
-const CommitContext = /*                */ 0b100000;
+const RenderContext = /*                */ 0b010000;  // react正在计算更新
+const CommitContext = /*                */ 0b100000;  // react正在提交更新
 
 type RootExitStatus = 0 | 1 | 2 | 3 | 4 | 5;
 const RootIncomplete = 0;
@@ -223,6 +223,7 @@ export type Thenable = {
 };
 
 // Describes where we are in the React execution stack
+// 记录react中当前的执行栈
 let executionContext: ExecutionContext = NoContext;
 // The root we're working on
 let workInProgressRoot: FiberRoot | null = null;
@@ -299,16 +300,19 @@ let spawnedWorkDuringRender: null | Array<ExpirationTime> = null;
 let currentEventTime: ExpirationTime = NoWork;
 
 export function requestCurrentTimeForUpdate() {
+  // 如果当前是在更新阶段或者提交更新阶段，那么直接获取当前时间
   if ((executionContext & (RenderContext | CommitContext)) !== NoContext) {
     // We're inside React, so it's fine to read the actual time.
     return msToExpirationTime(now());
   }
   // We're not inside React, so we may be in the middle of a browser event.
+  // 如果react正在处理浏览器事件
   if (currentEventTime !== NoWork) {
     // Use the same start time for all updates until we enter React again.
     return currentEventTime;
   }
   // This is the first update since React yielded. Compute a new start time.
+  // 计算一个新的时间
   currentEventTime = msToExpirationTime(now());
   return currentEventTime;
 }
