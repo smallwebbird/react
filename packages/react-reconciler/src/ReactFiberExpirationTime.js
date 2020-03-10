@@ -42,8 +42,11 @@ const UNIT_SIZE = 10;
 const MAGIC_NUMBER_OFFSET = Batched - 1;
 
 // 1 unit of expiration time represents 10ms.
+// expireation时间越长，优先级就越高
 export function msToExpirationTime(ms: number): ExpirationTime {
   // Always subtract from the offset so that we don't clash with the magic number for NoWork.
+  // 假设在这里 设MAGIC_NUMBER_OFFSET为a
+  // a - ((ms/10)|0)
   return MAGIC_NUMBER_OFFSET - ((ms / UNIT_SIZE) | 0);
 }
 
@@ -68,6 +71,23 @@ function computeExpirationBucket(
     )
   );
 }
+// 针对InteractiveExpiration
+// a - ceiling(a - cuurentTime+ 50, 10)
+// a - ((a-currentTime + 50) / 10 + 1) * 10
+// a - (a - currentTime + 50 + 10)
+//currentTime - 60
+// a - ms/10 - 60
+// 经过expirationTimeToMs转化
+// (a - (a - ms/10 -60)) * 10
+// (ms/10 | 0) + 600
+// 针对 AsyncExpiration 
+// a- ceiling(a - currentTime + 500, 25)
+// a - ((a - currentTime + 500)/ 25 + 1)* 25
+// a - (a - cuurentTime + 500 + 25)
+// currentTime - 525
+// a - ms/10 - 525
+// a - (a - (ms/10 | 0) -525) * 10
+// (ms/10 | 0) + 5250
 
 // TODO: This corresponds to Scheduler's NormalPriority, not LowPriority. Update
 // the names to reflect.
@@ -110,9 +130,10 @@ export function computeSuspenseExpiration(
 export const HIGH_PRIORITY_EXPIRATION = __DEV__ ? 500 : 150;
 export const HIGH_PRIORITY_BATCH_SIZE = 100;
 
+// expirationTime 主要有俩种第一种是InteractiveExpiration， 另一种是AsyncExpiration
 export function computeInteractiveExpiration(currentTime: ExpirationTime) {
   return computeExpirationBucket(
-    currentTime,
+    currentTime, 
     HIGH_PRIORITY_EXPIRATION,
     HIGH_PRIORITY_BATCH_SIZE,
   );
