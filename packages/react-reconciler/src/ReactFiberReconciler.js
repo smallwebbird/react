@@ -226,10 +226,10 @@ export function createContainer(
 }
 
 export function updateContainer(
-  element: ReactNodeList,
-  container: OpaqueRoot,
-  parentComponent: ?React$Component<any, any>,
-  callback: ?Function,
+  element: ReactNodeList, // 这个是子元素
+  container: OpaqueRoot, // fiberRoot这个东西
+  parentComponent: ?React$Component<any, any>, // 在render调用过程中这个传递的是null
+  callback: ?Function, // 回调函数
 ): ExpirationTime {
   if (__DEV__) {
     onScheduleRoot(container, element);
