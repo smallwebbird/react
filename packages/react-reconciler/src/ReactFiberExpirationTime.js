@@ -73,7 +73,7 @@ function computeExpirationBucket(
 }
 // 针对InteractiveExpiration
 // a - ceiling(a - cuurentTime+ 50, 10)
-// a - ((a-currentTime + 50) / 10 + 1) * 10
+// a - (((a-currentTime + 50) / 10 | 0) + 1) * 10
 // a - (a - currentTime + 50 + 10)
 //currentTime - 60
 // a - ms/10 - 60
@@ -82,7 +82,7 @@ function computeExpirationBucket(
 // (ms/10 | 0) + 600
 // 针对 AsyncExpiration 
 // a- ceiling(a - currentTime + 500, 25)
-// a - ((a - currentTime + 500)/ 25 + 1)* 25
+// a - (((a - currentTime + 500)/ 25 | 0) + 1)* 25
 // a - (a - cuurentTime + 500 + 25)
 // currentTime - 525
 // a - ms/10 - 525
